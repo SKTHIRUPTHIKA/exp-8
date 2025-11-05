@@ -1,0 +1,76 @@
+package multithreadingdemo;
+
+import java.util.Scanner;
+
+class TableThread extends Thread {
+    int n;
+
+    TableThread(int n) {
+        this.n = n;
+    }
+
+    public void run() {
+        System.out.println("\n--- Multiplication Table of " + n + " ---");
+        for (int i = 1; i <= 10; i++) {
+            System.out.println(n + " x " + i + " = " + (n * i));
+            try {
+                Thread.sleep(2000); 
+            } catch (InterruptedException e) {
+                System.out.println("TableThread interrupted");
+            }
+        }
+    }
+}
+
+class DivisorThread extends Thread {
+    int n;
+
+    DivisorThread(int n) {
+        this.n = n;
+    }
+
+    public void run() {
+        System.out.println("\n--- Divisors of " + n + " ---");
+        for (int i = 1; i <= n; i++) {
+            if (n % i == 0) {
+                System.out.println(i);
+                try {
+                    Thread.sleep(2000); // 2-second delay between outputs
+                } catch (InterruptedException e) {
+                    System.out.println("DivisorThread interrupted");
+                }
+            }
+        }
+    }
+}
+
+public class NumberThreads {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("URK24CS1269 - S K THIRUPTHIKA");
+        System.out.println("Exercise 8: Multithreading using Thread Class\n");
+
+        System.out.print("Enter a number: ");
+        int n = sc.nextInt();
+
+        TableThread t1 = new TableThread(n);
+        DivisorThread t2 = new DivisorThread(n);
+      
+        t1.start();
+        try {
+            t1.join(); 
+        } catch (InterruptedException e) {
+            System.out.println("Main thread interrupted during TableThread");
+        }
+
+        t2.start();
+        try {
+            t2.join(); 
+        } catch (InterruptedException e) {
+            System.out.println("Main thread interrupted during DivisorThread");
+        }
+
+        System.out.println("\nExecution completed successfully!");
+        sc.close();
+    }
+}
