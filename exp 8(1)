@@ -1,0 +1,83 @@
+package multithreadingdemo;
+
+import java.util.*;
+
+class EvenThread extends Thread {
+    int[] arr;
+
+    EvenThread(int[] arr) {
+        this.arr = arr;
+    }
+
+    public void run() {
+        System.out.println("\nEven numbers:");
+        for (int n : arr) {
+            if (n % 2 == 0) {
+                System.out.println(n);
+                try {
+                    Thread.sleep(2000); // pause for 2 seconds
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                }
+            }
+        }
+    }
+}
+
+class OddThread extends Thread {
+    int[] arr;
+
+    OddThread(int[] arr) {
+        this.arr = arr;
+    }
+
+    public void run() {
+        System.out.println("\nOdd numbers:");
+        for (int n : arr) {
+            if (n % 2 != 0) {
+                System.out.println(n);
+                try {
+                    Thread.sleep(2000); // pause for 2 seconds
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                }
+            }
+        }
+    }
+}
+
+public class ThreadExampleOrdered {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("URK24CS1269 - S K THIRUPTHIKA");
+        System.out.println("Exercise 8: Multithreading Example");
+
+        int[] arr = new int[10];
+        System.out.println("\nEnter 10 numbers (space separated):");
+        for (int i = 0; i < 10; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        EvenThread e = new EvenThread(arr);
+        OddThread o = new OddThread(arr);
+
+        // Start even thread first
+        e.start();
+        try {
+            e.join(); // wait until EvenThread finishes
+        } catch (InterruptedException ex) {
+            System.out.println(ex);
+        }
+
+        // Then start odd thread
+        o.start();
+        try {
+            o.join(); // wait until OddThread finishes
+        } catch (InterruptedException ex) {
+            System.out.println(ex);
+        }
+
+        System.out.println("\nAll threads completed successfully.");
+        sc.close();
+    }
+}
